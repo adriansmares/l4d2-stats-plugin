@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Prune old image versions
-        uses: snok/container-retention-policy@v1
+        uses: snok/container-retention-policy@v2
         with:
           image-names: l4d2-stats-plugin
           account-type: personal

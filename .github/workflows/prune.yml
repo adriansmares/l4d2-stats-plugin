@@ -1,0 +1,25 @@
+name: Prune Old Container Images
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+  workflow_dispatch: {}
+
+jobs:
+  prune-images:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Prune old image versions
+        uses: snok/container-retention-policy@v3.0.1
+        with:
+          account: user
+          cut-off: 4w
+          image-names: l4d2-stats-plugin
+          image-tags: sha-*
+          keep-n-most-recent: 3
+          token: ${{ secrets.GITHUB_TOKEN }}

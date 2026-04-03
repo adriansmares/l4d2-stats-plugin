@@ -30,6 +30,7 @@ const [ gamemodes, gameStats, games ] = await Promise.all([
 const meta: PageInfo = {
     title: `${gamemode} Games - ${user.last_alias}`,
     description: `View ${user.last_alias}'s "${gamemode}" gamemode games`,
+    noIndex: true    
 }
 if(import.meta.env.PROD) Astro.response.headers.set("Cache-Control", "public, max-age=3600")
 meta.noIndex = meta.noFollow = Astro.url.searchParams.size > 0 // Disable indexing/follow if any queries have been set

@@ -16,7 +16,7 @@ const totalMinutes = weapons.reduce((pv, cv) => pv + cv.minutesUsed, 0)
 const meta: PageInfo = {
     title: `Weapons - ${user.last_alias}`,
     description: `View ${user.last_alias}'s weapon statistics`,
-    
+    noIndex: true
 }
 ---
 <Layout meta={meta}>

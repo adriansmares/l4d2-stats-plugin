@@ -15,6 +15,7 @@ const points = await getUserPointsHistory(params.steamid)
 const meta: PageInfo = {
     title: `Points - ${user.last_alias}`,
     description: `View ${user.last_alias}'s point history breakdown`,
+    noIndex: true
 }
 
 // Written in past tense. Will have 2x, nX prefixed if multiplier > 1

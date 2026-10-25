@@ -4,8 +4,6 @@
 #define _log_included
 #define LOG_BUFFER_SIZE 1024
 
-int LOG_LEVEL = Log_Info;
-
 enum LogLevel {
     Log_Error = 1,
     Log_Warn,
@@ -14,6 +12,8 @@ enum LogLevel {
     Log_Trace,
     Log__MaxLevels
 }
+
+int LOG_LEVEL = Log_Info;
 char LOG_LEVEL_PREFIX[Log__MaxLevels][] = {
     "-",
     "ERROR",

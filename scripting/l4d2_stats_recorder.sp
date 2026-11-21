@@ -94,13 +94,18 @@ enum struct Game {
 
 	void GetMap() {
 		GetCurrentMap(this.mapId, sizeof(this.mapId));
-		this.isCustomMap = this.mapId[0] != 'c' || !IsCharNumeric(this.mapId[1]) || !(IsCharNumeric(this.mapId[2]) || this.mapId[2] == 'm');
+		// Official maps are c<campaign>m<chapter>; custom maps can start the same way (c1918_red_square_c1)
+		int mapIndex = -1;
+		if(this.mapId[0] == 'c' && IsCharNumeric(this.mapId[1])) {
+			int digits = IsCharNumeric(this.mapId[2]) ? 2 : 1;
+			if(this.mapId[1 + digits] == 'm')
+				mapIndex = StringToInt(this.mapId[1]) - 1;
+		}
+		this.isCustomMap = mapIndex < 0 || mapIndex >= sizeof(OFFICIAL_MAP_NAMES);
 		if(this.isCustomMap)
 			InfoEditor_GetString(0, "DisplayTitle", this.mapTitle, sizeof(this.mapTitle));
-		else {
-			int mapIndex = StringToInt(this.mapId[1]) - 1;
+		else
 			strcopy(this.mapTitle, sizeof(this.mapTitle), OFFICIAL_MAP_NAMES[mapIndex]);
-		}
 		InfoEditor_GetString(0, "Name", this.missionId, sizeof(this.missionId));
 		LogDebug("%s \"%s\" %s (custom=%b)", this.mapId, this.mapTitle, this.missionId, this.isCustomMap);
 	}

@@ -89,10 +89,15 @@ void DBCT_RateMap(Handle db, Handle child, const char[] error, int userid) {
 
 //After game created, get id
 void DBCT_CreateGame(Database db, DBResultSet results, const char[] error, int userid) {
+	game.creating = false;
 	if(db == INVALID_HANDLE || results == INVALID_HANDLE) {
 		LogError("DBCT_CreateGame returned error: %s", error);
 	} else if(results.InsertId > 0) {
 		game.id = results.InsertId
 		LogInfo("Game ID: %d", game.id);
+		if(game.winPending) {
+			game.winPending = false;
+			RecordFinaleWin();
+		}
 	}
 }

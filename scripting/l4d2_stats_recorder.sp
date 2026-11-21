@@ -71,6 +71,8 @@ enum struct Game {
 	bool isVersusSwitched;
 	bool finished; // finale_vehicle_ready triggered
 	bool submitted; // finale_win triggered
+	bool creating; // CreateGame's insert hasn't returned yet
+	bool winPending; // finale_win came before the game had an id
 	char gamemode[32];
 	char uuid[64];
 	char mapId[64];
@@ -83,6 +85,8 @@ enum struct Game {
 		this.startTime = GetTime();
 		this.clownHonks = 0;
 		this.submitted = false;
+		this.creating = false;
+		this.winPending = false;
 		this.finished = false;
 		LogInfo("Started recording statistics for new session (%d)", this.startTime);
 	}
@@ -893,6 +897,21 @@ void Event_FinaleWin(Event event, const char[] name, bool dontBroadcast) {
 	if(!L4D_IsMissionFinalMap() || game.submitted) return;
 
 	game.difficulty = event.GetInt("difficulty");
+	if(!game.id) {
+		// Some custom finales win without finale_start (twd_ep5's escape is a button), so no game was created:
+		// create it now and record the win once the insert returns its id
+		LogWarn("game id missing at finale win, creating game");
+		game.winPending = true;
+		if(!game.creating) {
+			CreateGame();
+			SubmitMapInfo();
+		}
+		return;
+	}
+	RecordFinaleWin();
+}
+
+void RecordFinaleWin() {
 	UpdateGame(); // update date_end
 
 	for(int i = 1; i <= MaxClients; i++) {

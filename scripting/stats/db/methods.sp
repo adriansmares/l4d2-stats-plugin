@@ -151,6 +151,7 @@ void CreateGame() {
 		serverTags, 			//server_tags
 		STAT_METRIC_VERSION     //stat_version
 	);
+	game.creating = true;
 	g_db.Query(DBCT_CreateGame, query, _, DBPrio_Low);
 	LogTrace("CreateGame %s", query);
 }
